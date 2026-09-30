@@ -1,7 +1,7 @@
 // greenscape-backend/models/Review.js
 import mongoose from 'mongoose';
 
-const reviewSchema = new mongoose.Schema(
+const ReviewSchema = new mongoose.Schema(
   {
     product: {
       type: mongoose.Schema.Types.ObjectId,
@@ -118,19 +118,22 @@ const reviewSchema = new mongoose.Schema(
 );
 
 // One review per user per product
-reviewSchema.index({ product: 1, user: 1 }, { unique: true, sparse: true });
+ReviewSchema.index({ product: 1, user: 1 }, { unique: true, sparse: true });
 
 // Fast lookups
-reviewSchema.index({ product: 1, status: 1, createdAt: -1 });
-reviewSchema.index({ status: 1, createdAt: -1 });
+ReviewSchema.index({ product: 1, status: 1, createdAt: -1 });
+ReviewSchema.index({ status: 1, createdAt: -1 });
 
 // Virtuals
-reviewSchema.virtual('starString').get(function () {
+ReviewSchema.virtual('starString').get(function () {
   return '★'.repeat(this.rating || 0) + '☆'.repeat(5 - (this.rating || 0));
 });
 
-reviewSchema.virtual('hasAdminReply').get(function () {
+ReviewSchema.virtual('hasAdminReply').get(function () {
   return !!(this.adminReply && this.adminReply.trim().length > 0);
 });
 
-export default mongoose.model('Review', reviewSchema);
+ReviewSchema.index({ rating: -1 });
+ReviewSchema.index({ user: 1, createdAt: -1 });
+
+export default mongoose.model('Review', ReviewSchema);

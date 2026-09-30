@@ -120,4 +120,14 @@ const BannerSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+
+// ==========================================
+// ✅ INDEXES
+// ==========================================
+BannerSchema.index({ isActive: 1, order: 1 });
+BannerSchema.index({ isActive: 1, bannerType: 1 });
+BannerSchema.index({ createdAt: -1 });
+BannerSchema.index({ startDate: 1, endDate: 1 });
+BannerSchema.index({ 'showOnPages.home': 1 });
+
 export default mongoose.model('Banner', BannerSchema);
